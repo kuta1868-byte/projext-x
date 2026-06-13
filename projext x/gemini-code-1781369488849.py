@@ -35,34 +35,24 @@ st.markdown("""
         background-color: #0ea5e9;
         border-color: #0ea5e9;
     }
-    /* تعديل اتجاه الراديو وبقية العناصر ليدعم العربي */
     [data-testid="stRadio"]>label {
         text-align: right;
         width: 100%;
     }
     </style>
-""", unsafe_allowed_code=True)
+""", unsafe_allow_html=True) # <-- تم تصحيح هذا السطر هنا
 
 # ==========================================
 # محرك الذكاء الاصطناعي (AI Functions)
 # ==========================================
 def ai_anonymize_data(text):
-    """
-    خوارزمية ذكاء اصطناعي قائمة على القواعد لحماية خصوصية المريض (Data Privacy & De-identification)
-    """
-    # إخفاء أرقام الهواتف (الهويات) المكونة من 10 إلى 11 رقم
     text = re.sub(r'\b\d{10,11}\b', '[🔒 رقم هاتف محمي ومشفر]', text)
-    
-    # قائمة أسماء شائعة لإخفائها تلقائياً في حال ورودها بالتقرير السريري
     names_to_hide = ['أحمد', 'محمد', 'علي', 'فاطمة', 'سارة', 'حسين', 'زمن', 'مصطفى']
     for name in names_to_hide:
         text = text.replace(name, '[🔒 اسم مريض مخفي للخصوصية]')
     return text
 
 def ai_clinical_assistant(text):
-    """
-    مساعد سريري ذكي يحاكي تحليل لغة الأعراض الطبية وربطها بالبروتوكولات الأكاديمية
-    """
     text_lower = text.lower()
     if "سعال" in text_lower or "حرارة" in text_lower or "كحة" in text_lower:
         return "🤖 اشتباه في عدوى بالجهاز التنفسي (Respiratory Infection). التوصية الدراسية: يُنصح بطلب صورة أشعة للصدر (Chest X-Ray) وفحص الدم الشامل CBC لمراقبة خلايا WBC."
@@ -81,7 +71,6 @@ with st.sidebar:
     st.markdown("<p style='text-align: center; font-size: 12px; color: #94a3b8;'>HCT 487 - AI in Healthcare Project</p>", unsafe_allowed_code=True)
     st.markdown("---")
     
-    # قائمة التنقل
     choice = st.radio(
         "انتقل بين أقسام الموقع:",
         ["📊 لوحة التحكم (Dashboard)", "📝 سجل الحالات الذكي (AI Logbook)", "🔬 دليل المختبر والأجهزة"]
@@ -94,13 +83,11 @@ with st.sidebar:
 # واجهات الموقع الرئيسية (App Sections)
 # ==========================================
 
-# --- 1. واجهة لوحة التحكم ---
 if choice == "📊 لوحة التحكم (Dashboard)":
     st.title("لوحة التحكم السريرية لطلاب قسم العلوم الصحية 👨‍⚕️")
     st.write(f"مرحباً بك مجدداً | تاريخ اليوم: {datetime.date.today().strftime('%Y-%m-%d')}")
     st.markdown("---")
     
-    # كروت الإحصائيات الفورية
     col1, col2, col3 = st.columns(3)
     with col1:
         st.info("📌 **القسم الحالي بالتدريب**\n\nقسم الأشعة والتصوير الطبي (Radiology)")
@@ -112,16 +99,13 @@ if choice == "📊 لوحة التحكم (Dashboard)":
     st.markdown("---")
     st.subheader("📊 توزيع الحالات وفحوصات الأجهزة الطبية الموثقة هذا الأسبوع")
     
-    # بيانات الرسم البياني
     chart_data = pd.DataFrame({
         'نوع الفحص الطبي': ['X-Ray', 'MRI', 'CT Scan', 'Blood Tests', 'Ultrasound'],
         'عدد الحالات الموثقة': [12, 5, 3, 18, 7]
     })
     
-    # رسم بياني مدمج من ستريمليت
     st.bar_chart(data=chart_data, x='نوع الفحص الطبي', y='عدد الحالات الموثقة', color='#0ea5e9')
 
-# --- 2. واجهة سجل الحالات الذكي ---
 elif choice == "📝 سجل الحالات الذكي (AI Logbook)":
     st.title("📝 سجل الحالات الطبي الذكي (AI Logbook)")
     st.write("أداة مخصصة لتوثيق الحالات السريرية أثناء التناوب العملي، مع معالجة البيانات فورياً لحماية خصوصية المرضى.")
@@ -140,22 +124,18 @@ elif choice == "📝 سجل الحالات الذكي (AI Logbook)":
             ["بدون جهاز (فحص سريري عام)", "Siemens P 135/30 R X-ray Tube", "GE SIGNA MRI Scanner", "Philips Ultrasound"]
         )
         
-        # زر تشغيل الذكاء الاصطناعي
         if st.button("تحليل ومعالجة الحالة بالذكاء الاصطناعي ✨"):
             if not patient_notes.strip():
                 st.error("⚠️ الرجاء كتابة ملاحظات أو أعراض الحالة أولاً قبل التحليل!")
             else:
-                # محاكاة وقت تفكير ومعالجة الـ AI
                 with st.spinner("جاري تشغيل محرك الـ AI وفلترة البيانات الحساسة..."):
                     time.sleep(1.5)
                     
-                    # استدعاء الدوال الذكية
                     safe_data = ai_anonymize_data(patient_notes)
                     ai_suggestion = ai_clinical_assistant(patient_notes)
                     
                     st.success("✅ تم الانتهاء من معالجة البيانات بنجاح!")
                     
-                    # عرض النتائج في كتل مرتبة
                     st.markdown("### 🔒 1. إخفاء هوية البيانات (De-identification Result):")
                     st.info(safe_data)
                     
@@ -163,7 +143,6 @@ elif choice == "📝 سجل الحالات الذكي (AI Logbook)":
                     st.warning(ai_suggestion)
                     st.caption(f"⚙️ تم ربط هذه الحالة في السجل بجهاز: **{equipment_used}**")
 
-# --- 3. واجهة دليل المختبر ---
 elif choice == "🔬 دليل المختبر والأجهزة":
     st.title("🔬 المرجع السريع للأجهزة الطبية والتحاليل")
     st.write("مرجع سريع للطالب لضمان الكفاءة أثناء الجولات السريرية والمختبرية.")
