@@ -40,7 +40,7 @@ st.markdown("""
         width: 100%;
     }
     </style>
-""", unsafe_allow_html=True) # <-- تم تصحيح هذا السطر هنا
+""", unsafe_allow_html=True)
 
 # ==========================================
 # محرك الذكاء الاصطناعي (AI Functions)
@@ -67,8 +67,8 @@ def ai_clinical_assistant(text):
 # القائمة الجانبية للتنقل (Sidebar)
 # ==========================================
 with st.sidebar:
-    st.markdown("<h2 style='text-align: center; color: #0ea5e9;'>🏥 ClinicalTrack</h2>", unsafe_allowed_code=True)
-    st.markdown("<p style='text-align: center; font-size: 12px; color: #94a3b8;'>HCT 487 - AI in Healthcare Project</p>", unsafe_allowed_code=True)
+    st.markdown("<h2 style='text-align: center; color: #0ea5e9;'>🏥 ClinicalTrack</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-size: 12px; color: #94a3b8;'>HCT 487 - AI in Healthcare Project</p>", unsafe_allow_html=True)
     st.markdown("---")
     
     choice = st.radio(
@@ -77,7 +77,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.markdown("<p style='text-align: center; font-size: 11px; color: #64748b;'>إعداد الطالب | تحت إشراف د. عباس الزبيدي</p>", unsafe_allowed_code=True)
+    st.markdown("<p style='text-align: center; font-size: 11px; color: #64748b;'>إعداد الطالب | تحت إشراف د. عباس الزبيدي</p>", unsafe_allow_html=True)
 
 # ==========================================
 # واجهات الموقع الرئيسية (App Sections)
