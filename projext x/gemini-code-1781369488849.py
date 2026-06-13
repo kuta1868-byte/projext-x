@@ -163,3 +163,92 @@ elif choice == "🔬 دليل المختبر والأجهزة":
         st.subheader("إرشادات التشغيل والسلامة للأجهزة المعتمدة بالقسم")
         st.error("**⚠️ Siemens X-ray Tube:** تأكد دائماً من ضبط إعدادات الـ (kVp) والـ (mAs) بدقة حسب سماكة العضو لتقليل الجرعة الإشعاعية للمريض تماشياً مع مبدأ (ALARA).")
         st.info("**ℹ️ GE SIGNA MRI Scanner:** الفحص الأمني الصارم لمنع دخول أي مواد ممغنطة أو معادن إلى غرفة الفحص لخطورة المجال المغناطيسي العالي.")
+        import streamlit as st
+import pandas as pd
+import datetime
+import re
+import time
+
+# ==========================================
+# إعدادات الصفحة المتقدمة للموقع
+# ==========================================
+st.set_page_config(
+    page_title="ClinicalTrack Portal | منصة التدريب السريري الذكية", 
+    page_icon="🏥", 
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# تخصيص التصميم والخطوط لتبدو كمنصة طبية احترافية
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+    html, body, [data-testid="stSidebar"], .stMarkdown {
+        font-family: 'Tajawal', sans-serif;
+        text-align: right;
+    }
+    .stButton>button {
+        background-color: #0f172a;
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+        width: 100%;
+        padding: 10px;
+        transition: 0.3s;
+    }
+    .stButton>button:hover {
+        background-color: #0ea5e9;
+        border-color: #0ea5e9;
+    }
+    [data-testid="stRadio"]>label {
+        text-align: right;
+        width: 100%;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# ==========================================
+# محرك الذكاء الاصطناعي المتقدم (Advanced AI Engine)
+# ==========================================
+def ai_anonymize_data(text):
+    """دالة حماية الخصوصية وتشفير البيانات الحساسة للمرضى"""
+    text = re.sub(r'\b\d{10,11}\b', '[🔒 رقم هاتف محمي ومشفر]', text)
+    names_to_hide = ['أحمد', 'محمد', 'علي', 'فاطمة', 'سارة', 'حسين', 'زمن', 'مصطفى', 'رنا', 'خالد', 'عبدالله']
+    for name in names_to_hide:
+        text = text.replace(name, '[🔒 اسم مريض مخفي للخصوصية]')
+    return text
+
+def ai_smart_triage_assistant(text):
+    """محرك الفرز والتشخيص السريري الأكاديمي المتقدم للطلاب"""
+    text_lower = text.lower()
+    
+    # تعريف مستويات الخطورة والألوان والتوصيات
+    result = {
+        "status": "🟢 اعتيادية (Routine Finding)",
+        "color": "#10b981",
+        "analysis": "🤖 تحليل النظام: الأعراض مستقرة وتندرج تحت الفحص الروتيني العام. التوصية: توثيق العلامات الحيوية القياسية في السجل وجدولة المراجعة الدورية.",
+        "specialty": "الطب العام الباطني (General Medicine)"
+    }
+    
+    # 1. حالات الطوارئ القصوى والمهددة للحياة (Red Flags / Emergency)
+    if any(word in text_lower for word in ["صدر", "heart", "جلطة", "stroke", "نزيف شديد", "غيبوبة", "comatose", "تنفس حاد"]):
+        result["status"] = "🔴 حالة طارئة حرجة (STAT / Emergency)"
+        result["color"] = "#ef4444"
+        result["specialty"] = "الطوارئ والعناية المركزة / أمراض القلب والأوعية"
+        result["analysis"] = "🚨 تحذير خطورة عالية: الأعراض تشير إلى اشتباه بأزمة قلبية أو جلطة حادة أو تروما صدرية مهددة للحياة! التوصية السريرية الفورية: نقل المريض فوراً لغرفة الإنعاش وتوجيه نداء عاجل للطبيب المقيم الدوري، مع تجهيز فحص تخطيط القلب ECG وصورة أشعة صدر متنقلة (Mobile X-Ray) فورا."
+    
+    # 2. حالات الكسور والتروما الهيكلية (Orthopedics / Radiology)
+    elif any(word in text_lower for word in ["كسر", "fracture", "ألم شديد في العظم", "سقوط", "حادث", "trauma"]):
+        result["status"] = "🔴 حالة طارئة (Urgent Radiology Case)"
+        result["color"] = "#f97316"
+        result["specialty"] = "جراحة العظام والتصوير الشعاعي (Radiology)"
+        result["analysis"] = "🦴 اشتباه تروما هيكلية حادة: المؤشرات تدل على وجود كسر عظمي أو خلع مفصلي حاد نتيجة الحادث. التوصية الدراسية: تثبيت العضو المصاب فوراً، وتوجيه المريض بحذر شديد إلى وحدة الأشعة السينية (X-Ray Tube). يجب على الطالب مراعاة معايير السلامة الإشعاعية ALARA وحساب الـ kVp بدقة لتجنب الإشعاع المفرط."
+        
+    # 3. الحالات التنفسية الحادة أو الالتهابات (Respiratory / Internal Medicine)
+    elif any(word in text_lower for word in ["سعال", "كحة", "حرارة", "ضيق نفس", "corona", "التهاب"]):
+        result["status"] = "🟡 حالة مستعجلة متوسطة (Urgent / Priority)"
+        result["color"] = "#f59e0b"
+        result["specialty"] = "الأمراض الصدرية والتنفسية (Pulmonology)"
+        result["analysis"] = "🫁 اشتباه عدوى جهاز تنفسي حادة (مثل Pneumonia أو التهاب شعب هوائية): الأعراض تتطلب تقييماً دقيقاً. التوصية الدراسية: يوصى بطلب فحص الدم الشامل CBC لمراقبة تعداد كريات الدم البيضاء (WBC) وطلب فحص أشعة صدر (Chest X-Ray) لاستبعاد الارتشاح الرئوي."
+        
+    # 4. حالات الصداع والضغط والأعراض العصبية المستقرة (
